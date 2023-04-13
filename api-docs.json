@@ -1,0 +1,53 @@
+{
+	"app_name": "iShkool",
+	"app_version": "1.0",
+	"app_version_code": "1",
+	"api": {
+		"host": "http://localhost:3000",
+		"port": 3000,
+		"version": "v1"
+	},
+	"services": [
+		{
+			"name": "auth",
+			"description": "Authentication service",
+			"root_url": "/auth",
+			"urls": [
+				{
+					"method": "POST",
+					"url": "/login",
+					"description": "Login user",
+					"params": [
+						{
+							"name": "email",
+							"type": "string",
+							"required": true
+						},
+						{
+							"name": "password",
+							"type": "string",
+							"required": true
+						}
+					]
+				},
+				{
+					"method": "POST",
+					"url": "/register",
+					"description": "Register user",
+					"params": [
+						{
+							"name": "email",
+							"type": "string",
+							"required": true
+						},
+						{
+							"name": "password",
+							"type": "string",
+							"required": true
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>API Documentation</title>
+	<link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1>API Documentation</h1>
+				<p>
+					App Name: <%= API_DOC.app_name %>
+				</p>
+				<p>
+					App Version: <%= API_DOC.app_version %>
+				</p>
+				<p>
+					App Version Code: <%= API_DOC.app_version_code %>
+				</p>
+				<p>
+					App Port: <%= API_DOC.api.port %>
+				</p>
+				<p>
+					API Version: <%= API_DOC.api.version %>
+				</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<h1>API List</h1>
+				<% for(var i=0; i < API_DOC.services.length; i++) { %>
+					<div class="api-list">
+						<h2>
+							<%= API_DOC.services[i].name %>
+						</h2>
+						<p>
+							<%= API_DOC.services[i].description %>
+						</p>
+						<p>
+							<%= API_DOC.services[i].root_url %>
+						</p>
+					</div>
+					<% } %>
+			</div>
+		</div>
+	</div>
+</body>
