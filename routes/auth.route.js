@@ -1,24 +1,20 @@
 const express = require("express");
 const {
-	signUpUser,
-	verifyUser,
-	resendOTP,
-	loginUser,
-	socialSignUp,
-	changePassword,
-	getResetPasswordCode,
-	resetPassword,
-	verifyResetPasswordCode,
-	signUpOrg,
-	signUpDonor,
-	socialSignIn,
+  signUpUser,
+  verifyUser,
+  resendOTP,
+  loginUser,
+  socialSignUp,
+  changePassword,
+  getResetPasswordCode,
+  resetPassword,
+  verifyResetPasswordCode,
+  socialSignIn,
 } = require("../controllers/auth.controller");
 
 const router = express.Router();
 
 router.post("/signup_user", signUpUser);
-router.post("/signup_org", signUpOrg);
-router.post("/signup_donor", signUpDonor);
 router.post("/verification", verifyUser);
 router.post("/resend_otp", resendOTP);
 router.post("/login", loginUser);

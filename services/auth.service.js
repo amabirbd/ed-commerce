@@ -6,15 +6,15 @@ const JWT = require("jsonwebtoken");
 const User = require("../models/user.model");
 const Role = require("../models/role.model");
 const SocialAuth = require("../models/socialAuth.model");
-const Course = require("../models/course.model");
-const Organization = require("../models/organization.model");
-const Donor = require("../models/donor.model");
-const Course_x_Student = require("../models/course_x_student.model");
+// const Course = require("../models/course.model");
+// const Organization = require("../models/organization.model");
+// const Donor = require("../models/donor.model");
+// const Course_x_Student = require("../models/course_x_student.model");
 const {
   isUserValid,
   isUserActive,
   isUserVerified,
-  isDonorValid,
+  // isDonorValid,
 } = require("./utils");
 const { InstanceError } = require("sequelize");
 
@@ -127,40 +127,40 @@ exports.signUpUser = async function (user_data) {
       throw new Error("Username is already taken");
     }
 
-    var org = await Organization.findOne({
-      where: {
-        email,
-      },
-    });
-    if (org) {
-      console.log(org);
-      throw new Error("Email Address is already registered");
-    }
-    org = await Organization.findOne({
-      where: {
-        username,
-      },
-    });
-    if (org) {
-      throw new Error("Username is already registered");
-    }
+    // var org = await Organization.findOne({
+    //   where: {
+    //     email,
+    //   },
+    // });
+    // if (org) {
+    //   console.log(org);
+    //   throw new Error("Email Address is already registered");
+    // }
+    // org = await Organization.findOne({
+    //   where: {
+    //     username,
+    //   },
+    // });
+    // if (org) {
+    //   throw new Error("Username is already registered");
+    // }
 
-    var donor = await Donor.findOne({
-      where: {
-        email,
-      },
-    });
-    if (donor) {
-      throw new Error("Email Address is already registered");
-    }
-    donor = await Donor.findOne({
-      where: {
-        username,
-      },
-    });
-    if (donor) {
-      throw new Error("Username is already registered");
-    }
+    // var donor = await Donor.findOne({
+    //   where: {
+    //     email,
+    //   },
+    // });
+    // if (donor) {
+    //   throw new Error("Email Address is already registered");
+    // }
+    // donor = await Donor.findOne({
+    //   where: {
+    //     username,
+    //   },
+    // });
+    // if (donor) {
+    //   throw new Error("Username is already registered");
+    // }
 
     if (forbiddenUsernameList.includes(username)) {
       throw new Error("Username is not allowed");
@@ -168,7 +168,7 @@ exports.signUpUser = async function (user_data) {
     const otpCode = Math.floor(1000 + Math.random() * 9000);
     var referCode = makeRandomString(6);
     // console.log(referCode);
-    const role_id = asStudent ? 2 : asTeacher ? 3 : asGuardian ? 4 : 0;
+    // const role_id = asStudent ? 2 : asTeacher ? 3 : asGuardian ? 4 : 0;
 
     user = await User.create({
       first_name: firstName,
@@ -181,7 +181,7 @@ exports.signUpUser = async function (user_data) {
       otp_code: otpCode,
       otp_expiry: new Date(new Date().getTime() + 10 * 60 * 1000),
       reffer_code: referCode,
-      role_id,
+      // role_id,
     });
 
     // Send email to user with OTP
@@ -203,23 +203,22 @@ exports.signUpUser = async function (user_data) {
         "last_name",
         "profile_picture",
         "reffer_code",
-        "role_id",
         "is_active",
         "is_verified",
       ],
-      include: [
-        {
-          model: Role,
-          as: "role",
-          attributes: [
-            "role_name",
-            "is_student",
-            "is_teacher",
-            "is_admin",
-            "is_superadmin",
-          ],
-        },
-      ],
+      // include: [
+      //   {
+      //     model: Role,
+      //     as: "role",
+      //     attributes: [
+      //       "role_name",
+      //       "is_student",
+      //       "is_teacher",
+      //       "is_admin",
+      //       "is_superadmin",
+      //     ],
+      // //   },
+      // ],
     });
     return user;
   } catch (error) {
@@ -227,130 +226,6 @@ exports.signUpUser = async function (user_data) {
     throw new Error(error);
   }
 };
-
-exports.signUpOrg = async function (user_data) {
-  try {
-    console.log(user_data);
-    const { fullName, username, email, password, confirmPassword } = user_data;
-
-    if (fullName === null || fullName === "") {
-      throw new Error("Organization name is required");
-    } else if (username === null || username === "") {
-      throw new Error("Organization username is required");
-    } else if (email === null || email === "") {
-      throw new Error("Organization email is required");
-    } else if (password === null || password === "") {
-      throw new Error("Organization password is required");
-    } else if (confirmPassword === null || confirmPassword === "") {
-      throw new Error("Organization confirm password is required");
-    } else if (password !== confirmPassword) {
-      throw new Error("Organization passwords do not match");
-    }
-
-    var user = await User.findOne({
-      where: { email },
-    });
-    if (user) {
-      throw new Error("Email Address is already registered");
-    }
-    user = await User.findOne({
-      where: {
-        username,
-      },
-    });
-    if (user) {
-      throw new Error("Username is already taken");
-    }
-
-    var org = await Organization.findOne({
-      where: {
-        email,
-      },
-    });
-    if (org) {
-      console.log(org);
-      throw new Error("Email Address is already registered");
-    }
-    org = await Organization.findOne({
-      where: {
-        username,
-      },
-    });
-    if (org) {
-      throw new Error("Username is already registered");
-    }
-
-    var donor = await Donor.findOne({
-      where: {
-        email,
-      },
-    });
-    if (donor) {
-      throw new Error("Email Address is already registered");
-    }
-    donor = await Donor.findOne({
-      where: {
-        username,
-      },
-    });
-    if (donor) {
-      throw new Error("Username is already registered");
-    }
-
-    if (forbiddenUsernameList.includes(username)) {
-      throw new Error("Username is not allowed");
-    }
-
-    const otpCode = Math.floor(1000 + Math.random() * 9000);
-    org = await Organization.create({
-      uuid: uuidv4(),
-      name: fullName,
-      username: username,
-      email: email,
-      password: await bcrypt.hash(password, 10),
-      is_verified: false,
-      is_active: true,
-      otp_code: otpCode,
-      otp_expiry: new Date(new Date().getTime() + 10 * 60 * 1000),
-    });
-
-    // Send email to user with OTP
-    var to = email;
-    var subject = "OTP for Sign Up";
-    var text = "Your OTP is " + otpCode;
-    sendEmail(to, subject, text);
-
-    org = await Organization.findOne({
-      where: {
-        email,
-      },
-      // all attributes except password
-      attributes: [
-        "id",
-        "email",
-        "username",
-        "phone",
-        "description",
-        "established",
-        "founder",
-        "profile_picture",
-        "cover_picture",
-        "type",
-        "total_teachers",
-        "total_students",
-        "token",
-        "is_active",
-        "is_deleted",
-        "is_verified",
-      ],
-    });
-    return org;
-  } catch (error) {
-    console.log(error);
-    throw new Error(error);
-  }
-};
-
 
 exports.verifyUser = async function (data) {
   const { email, code, resetPassword } = data;
@@ -402,8 +277,6 @@ exports.verifyUser = async function (data) {
   return user;
 };
 
-exports.verifyOrg = async function (data) {};
-
 exports.resendOTP = async function (data) {
   const { email } = data;
   var user = await User.findOne({
@@ -440,28 +313,24 @@ exports.loginUser = async function (user_data) {
       },
       attributes: ["id", "password", "is_active", "is_verified"],
     });
-    var org_data = await Organization.findOne({
-      where: {
-        email,
-      },
-      attributes: ["id", "password", "is_active", "is_verified"],
-    });
-    var donor_data = await Donor.findOne({
-      where: {
-        email,
-      },
-      attributes: ["id", "password", "is_active", "is_verified"],
-    });
-    if (!user_data && !org_data && !donor_data) {
+    // var org_data = await Organization.findOne({
+    //   where: {
+    //     email,
+    //   },
+    //   attributes: ["id", "password", "is_active", "is_verified"],
+    // });
+    // var donor_data = await Donor.findOne({
+    //   where: {
+    //     email,
+    //   },
+    //   attributes: ["id", "password", "is_active", "is_verified"],
+    // });
+    if (!user_data) {
       throw new Error("Email Address is not registered");
     }
     var user;
     if (user_data) {
       user = user_data;
-    } else if (org_data) {
-      user = org_data;
-    } else if (donor_data) {
-      user = donor_data;
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -518,88 +387,9 @@ exports.loginUser = async function (user_data) {
           "is_active",
           "profile_picture",
           "token",
-          "role_id",
-        ],
-        include: [
-          {
-            model: Role,
-            as: "role",
-            attributes: [
-              "role_name",
-              "is_student",
-              "is_teacher",
-              "is_admin",
-              "is_superadmin",
-            ],
-          },
         ],
       });
 
-      // get class count
-      var courses = await Course.findAll({
-        where: {
-          created_by: user.id,
-        },
-        attributes: ["id"],
-      });
-      var student_count = 0;
-      for (let i = 0; i < courses.length; i++) {
-        const course = courses[i];
-        const course_x_students = await Course_x_Student.findAll({
-          where: {
-            course_id: course.id,
-          },
-        });
-        student_count += course_x_students.length;
-      }
-
-      user.dataValues.class_count = courses.length;
-      user.dataValues.student_count = student_count;
-      user.dataValues.isOrg = false;
-      user.dataValues.isDonor = false;
-    } else if (org_data) {
-      user = await Organization.findOne({
-        where: {
-          email,
-        },
-        attributes: [
-          "id",
-          "email",
-          "username",
-          "phone",
-          "description",
-          "established",
-          "founder",
-          "profile_picture",
-          "cover_picture",
-          "type",
-          "total_teachers",
-          "total_students",
-          "token",
-          "is_active",
-          "is_deleted",
-          "is_verified",
-        ],
-      });
-      user.dataValues.isOrg = true;
-      user.dataValues.isDonor = false;
-    } else if (donor_data) {
-      user = await Donor.findOne({
-        where: {
-          email,
-        },
-        attributes: [
-          "id",
-          "name",
-          "email",
-          "username",
-          "phone",
-          "token",
-          "is_active",
-          "is_deleted",
-          "is_verified",
-        ],
-      });
       user.dataValues.isOrg = false;
       user.dataValues.isDonor = true;
     }
@@ -630,23 +420,9 @@ exports.socialSignIn = async function (user_data) {
         "last_name",
         "profile_picture",
         "reffer_code",
-        "role_id",
         "is_active",
         "is_verified",
         "token",
-      ],
-      include: [
-        {
-          model: Role,
-          as: "role",
-          attributes: [
-            "role_name",
-            "is_student",
-            "is_teacher",
-            "is_admin",
-            "is_superadmin",
-          ],
-        },
       ],
     });
     if (user) {
@@ -684,10 +460,10 @@ exports.socialSignUp = async function (user_data) {
     const makeUserName = (fn, ln) => {
       return (fn + ln).replace(/[^a-z0-9]/gi, "").toLowerCase();
     };
-    const asStudent = role === "student" && 2;
-    const asTeacher = role === "teacher" && 3;
-    const asGuardian = role === "guardian" && 4;
-    const role_id = asStudent ? 2 : asTeacher ? 3 : asGuardian ? 4 : 0;
+    // const asStudent = role === "student" && 2;
+    // const asTeacher = role === "teacher" && 3;
+    // const asGuardian = role === "guardian" && 4;
+    // const role_id = asStudent ? 2 : asTeacher ? 3 : asGuardian ? 4 : 0;
 
     var referCode = makeRandomString(6);
 
@@ -704,23 +480,9 @@ exports.socialSignUp = async function (user_data) {
         "last_name",
         "profile_picture",
         "reffer_code",
-        "role_id",
         "is_active",
         "is_verified",
         "token",
-      ],
-      include: [
-        {
-          model: Role,
-          as: "role",
-          attributes: [
-            "role_name",
-            "is_student",
-            "is_teacher",
-            "is_admin",
-            "is_superadmin",
-          ],
-        },
       ],
     });
 
@@ -748,7 +510,6 @@ exports.socialSignUp = async function (user_data) {
       is_verified: true,
       is_active: true,
       reffer_code: referCode,
-      role_id,
     });
 
     const token = await JWT.sign(
@@ -777,23 +538,9 @@ exports.socialSignUp = async function (user_data) {
         "last_name",
         "profile_picture",
         "reffer_code",
-        "role_id",
         "is_active",
         "is_verified",
         "token",
-      ],
-      include: [
-        {
-          model: Role,
-          as: "role",
-          attributes: [
-            "role_name",
-            "is_student",
-            "is_teacher",
-            "is_admin",
-            "is_superadmin",
-          ],
-        },
       ],
     });
     return {

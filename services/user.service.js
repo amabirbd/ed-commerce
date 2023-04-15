@@ -4,16 +4,7 @@ const nodemailer = require("nodemailer");
 const User = require("../models/user.model");
 const Role = require("../models/role.model");
 const SocialAuth = require("../models/socialAuth.model");
-const Course = require("../models/course.model");
-const Subject = require("../models/subject.model");
-const Class = require("../models/class.model");
-const Organization = require("../models/organization.model");
-const Course_x_Student = require("../models/course_x_student.model");
-const File = require("../models/file.model");
 const { isUserValid, isUserActive, isUserVerified } = require("./utils");
-const Donor = require("../models/donor.model");
-const Scholarship_x_Student = require("../models/scholarship_x_student.model");
-const Scholarship = require("../models/scholarship.model");
 
 require("dotenv").config();
 
@@ -42,27 +33,6 @@ exports.getAllUsers = async function () {
 	}
 };
 
-exports.getAllTeachers = async function () {
-	try {
-		const teacher_users = await getUsersByRoleId(3);
-
-		return teacher_users;
-	} catch (err) {
-		console.log(err);
-		throw new Error(err);
-	}
-};
-
-exports.getAllStudents = async function () {
-	try {
-		const student_users = await getUsersByRoleId(2);
-
-		return student_users;
-	} catch (err) {
-		console.log(err);
-		throw new Error(err);
-	}
-};
 
 exports.getUserDetailsByUsername = async function (params, reqUserId) {
 	console.log("params", params);
