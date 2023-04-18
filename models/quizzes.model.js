@@ -50,10 +50,10 @@ const Quizzes = database.define(
     }
 );
 
-Quizzes.sync({ alter: true })
-    .then(() => console.log("Quizzes table created"))
-    .catch((error) =>
-        console.log("Error creating Quizzes table", error)
-    );
+// Quizzes.sync({ alter: true })
+//     .then(() => console.log("Quizzes table created"))
+//     .catch((error) =>
+//         console.log("Error creating Quizzes table", error)
+//     );
 
 module.exports = Quizzes;

@@ -50,10 +50,10 @@ QuizzesHistory.belongsTo(Quizzes, {
 	as: "quiz",
 });
 
-QuizzesHistory.sync({ alter: true })
-    .then(() => console.log("QuizzesHistory table created"))
-    .catch((error) =>
-        console.log("Error creating QuizzesHistory table", error)
-    );
+// QuizzesHistory.sync({ alter: true })
+//     .then(() => console.log("QuizzesHistory table created"))
+//     .catch((error) =>
+//         console.log("Error creating QuizzesHistory table", error)
+//     );
 
 module.exports = QuizzesHistory;

@@ -38,10 +38,10 @@ EcAccount.belongsTo(User, {
 	as: "user",
 });
 
-EcAccount.sync({ alter: true })
-    .then(() => console.log("EcAccount table created"))
-    .catch((error) =>
-        console.log("Error creating EcAccount table", error)
-    );
+// EcAccount.sync({ alter: true })
+//     .then(() => console.log("EcAccount table created"))
+//     .catch((error) =>
+//         console.log("Error creating EcAccount table", error)
+//     );
 
 module.exports = EcAccount;
