@@ -7,10 +7,14 @@ const database = require("./database");
 const authRoutes = require("./routes/auth.route");
 const userRoutes = require("./routes/user.route");
 const roleRoutes = require("./routes/role.route");
+const quizzesRoutes = require("./routes/quizzes.route");
 
 // models
 const User = require("./models/user.model");
 const Role = require("./models/role.model");
+const EcAccount = require("./models/ecAccount.model");
+const Quizzes = require("./models/quizzes.model");
+const QuizzesHistory = require("./models/quizzesHistory.model");
 
 database
   .authenticate()
@@ -31,6 +35,7 @@ app.set("view engine", "ejs");
 app.use("/api/role", roleRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/quizzes", quizzesRoutes);
 
 app.get("/", async (req, res) => {
   res.send("<h2>Ed Commerce API</h2>");
@@ -44,5 +49,5 @@ app.get("/api-docs", async (req, res) => {
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
-  console.log(`Server running at: ${PORT}/`);
+  console.log(`Server running at: http://localhost:${PORT}/`);
 });
