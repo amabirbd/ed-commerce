@@ -5,6 +5,7 @@ const apiResponse = require("../utils/apiResponse");
 
 const Quizzes = require("../models/quizzes.model");
 const QuizzesHistory = require("../models/quizzesHistory.model");
+const EcAccount = require("../models/ecAccount.model");
 
 const getQuizzes = catchAsync(async (req, res) => {
 
@@ -26,6 +27,10 @@ const getQuiz = catchAsync(async (req, res) => {
             uuid: uuid,
         }
     });
+
+    if (data === null) {
+        return apiResponse(res, httpStatus.NOT_FOUND, { message: "No quiz found." });
+    }
 
     return apiResponse(res, httpStatus.OK, { data, message: "Quiz successfully retrieved." });
 });
@@ -97,10 +102,16 @@ const getQuizzesHistoryByUser = catchAsync(async (req, res) => {
         order: [['created_at', 'DESC']]
     });
 
+    if (data == 0) {
+        return apiResponse(res, httpStatus.NOT_FOUND, { message: "No user found." });
+    }
+
     return apiResponse(res, httpStatus.OK, { data, message: "Successfully retrieved all quizzes history of a specific user." });
 });
 
 const getRandomQuiz = catchAsync(async (req, res) => {
+
+    const { ec_account_id } = req.body;
 
     const count = await Quizzes.count();
     if (count === 0) {
@@ -115,10 +126,12 @@ const getRandomQuiz = catchAsync(async (req, res) => {
     let randomId = Math.floor(Math.random() * (lastItemId - firstItemId + 1) + firstItemId);
 
     let data = await Quizzes.findOne({ where: { id: randomId } });
+    let hasAttempted = await QuizzesHistory.findOne({ where: { ec_account_id, quiz_id: randomId } });
 
-    while (!data) {
+    while (!data || hasAttempted) {
         randomId = Math.floor(Math.random() * (lastItemId - firstItemId + 1) + firstItemId);
         data = await Quizzes.findOne({ where: { id: randomId } });
+        hasAttempted = await QuizzesHistory.findOne({ where: { ec_account_id, quiz_id: randomId } });
     }
 
     return apiResponse(res, httpStatus.OK, { data, message: "Random quiz successfully retrieved." });
@@ -133,6 +146,13 @@ const quizAttempt = catchAsync(async (req, res) => {
     const is_correct = quiz.answer === answer ? true : false;
 
     const data = await QuizzesHistory.create({ ec_account_id, quiz_id, answer, is_correct });
+
+    const ecAccount = await EcAccount.findOne({ where: { id: ec_account_id } });
+    if (is_correct) {
+        await ecAccount.increment("points", { by: 2 });
+    } else {
+        await ecAccount.decrement("points", { by: 1 });
+    }
 
     return apiResponse(res, httpStatus.OK, { data, message: "Successfully recorded quiz attempt." });
 });
