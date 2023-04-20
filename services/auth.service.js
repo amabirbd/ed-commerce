@@ -6,6 +6,7 @@ const JWT = require("jsonwebtoken");
 const User = require("../models/user.model");
 const Role = require("../models/role.model");
 const SocialAuth = require("../models/socialAuth.model");
+const EcAccount = require("../models/ecAccount.model");
 // const Course = require("../models/course.model");
 // const Organization = require("../models/organization.model");
 // const Donor = require("../models/donor.model");
@@ -313,18 +314,23 @@ exports.loginUser = async function (user_data) {
       },
       attributes: ["id", "password", "is_active", "is_verified"],
     });
-    // var org_data = await Organization.findOne({
-    //   where: {
-    //     email,
-    //   },
-    //   attributes: ["id", "password", "is_active", "is_verified"],
-    // });
-    // var donor_data = await Donor.findOne({
-    //   where: {
-    //     email,
-    //   },
-    //   attributes: ["id", "password", "is_active", "is_verified"],
-    // });
+
+    let ec_account = await EcAccount.findOne({
+      where: {
+        user_id: user_data.id,
+      },
+    });
+
+    if (!ec_account) {
+      ec_account = await EcAccount.create({
+        user_id: user_data.id,
+        points: 0,
+        temp_points: 0,
+      });
+    }
+
+    // const has_ec_account = () => {};
+
     if (!user_data) {
       throw new Error("Email Address is not registered");
     }
